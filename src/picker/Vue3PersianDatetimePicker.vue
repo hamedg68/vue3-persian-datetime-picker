@@ -1237,8 +1237,10 @@ export default {
         this.$nextTick(() => {
           if (this.appendTo) {
             try {
+              if (typeof document !== 'undefined') {
               let container = document.querySelector(this.appendTo)
               container.appendChild(this.$refs.picker)
+              }
             } catch (er) {
               // eslint-disable-next-line
               console.warn(`Cannot append picker to "${this.appendTo}"!`)
@@ -1281,6 +1283,7 @@ export default {
       immediate: true,
       handler: function(displayValue) {
         if (!this.customInput) return
+        if (typeof document === 'undefined') return
         const customInput = document.querySelector(this.customInput)
         if (customInput) customInput.value = displayValue
       }
@@ -1298,6 +1301,7 @@ export default {
       if (this.customInput && this.editable)
         addLiveEvent(this.customInput, 'blur', this.setOutput)
     })
+    if (typeof document === 'undefined') return
     document.body.addEventListener('keydown', e => {
       e = e || event
       let code = e.keyCode

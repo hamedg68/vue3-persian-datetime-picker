@@ -181,6 +181,7 @@ export const scrollIntoCenter = function(element, duration = 200, callback) {
 }
 
 export const addEventListener = function(el, type, handler) {
+  if (typeof document === 'undefined') return
   if (typeof el === 'string') el = document.querySelector(el)
   if (!el) throw new Error('Cant find custom element: ' + el)
   if (el.addEventListener) el.addEventListener(type, handler, true)
@@ -188,6 +189,7 @@ export const addEventListener = function(el, type, handler) {
 }
 
 export const addLiveEvent = function(selector, event, callback, context) {
+  if (typeof document === 'undefined') return
   addEventListener(context || document, event, function(e) {
     if (e.target.closest(selector)) callback.call(e.target, e)
   })

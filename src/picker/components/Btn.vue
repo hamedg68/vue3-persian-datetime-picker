@@ -14,6 +14,7 @@ export default {
     }
   },
   mounted() {
+    if (typeof document === 'undefined') return
     document.addEventListener('mouseup', () => {
       if (this.timeout || this.interval) this.up()
     })
