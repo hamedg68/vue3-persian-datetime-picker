@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Vue3PersianDatetimePicker from '@/picker/Vue3PersianDatetimePicker'
+import Vue3PersianDatetimePicker from '@/picker/Vue3PersianDatetimePicker.vue'
 export default {
   name: 'Home',
   components: {
@@ -24,7 +24,7 @@ export default {
     return {
       date: '',
       time: '',
-      pageTitle: process.env.VUE_APP_TITLE
+      pageTitle: import.meta.env.VITE_VUE_APP_TITLE
     }
   }
 }
