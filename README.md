@@ -4,6 +4,8 @@
 
 > A vue plugin to select jalali date and time
 
+Forked from [vue3-persian-datetime-picker](https://github.com/talkhabi/vue3-persian-datetime-picker)
+
 See documentation and demo at [vue-persian-datetime-picker](https://talkhabi.github.io/vue-persian-datetime-picker).
 
 If you are using vuejs 2, please refer to [this repository](https://talkhabi.github.io/vue-persian-datetime-picker).

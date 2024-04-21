@@ -1,1 +1,1 @@
-declare module 'vue3-persian-datetime-picker'
+declare module '@hamedg/vue3-persian-datetime-picker'
