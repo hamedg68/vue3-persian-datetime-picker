@@ -1,5 +1,6 @@
 <template>
   <span
+    id="mainContainer"
     class="vpd-main"
     :data-type="type"
     :data-placement="popoverPlace"
@@ -9,6 +10,7 @@
   >
     <span
       v-if="!customInputElement"
+      id="vpdInputGroup"
       ref="inputGroup"
       :class="['vpd-input-group', { 'vpd-disabled': disabled }]"
     >
@@ -78,7 +80,7 @@
         :data-type="type"
         @click.self="wrapperClick"
       >
-        <div ref="container" class="vpd-container">
+        <div id="vdpContainer" ref="container" class="vpd-container">
           <div class="vpd-content">
             <div
               v-if="!simple"
@@ -1248,6 +1250,18 @@ export default {
         this.checkScroll()
         this.setPlacement()
         this.$emit('open', this)
+
+        this.$nextTick(() => {
+          const element = document.getElementById('vdpContainer')
+          console.log(
+            'opqa',
+            this.getPos().top,
+            this.getVpdInputGroupHeight()
+          )
+          element.style.top =
+            this.getPos().top + this.getVpdInputGroupHeight() + 'px'
+          element.style.left = this.getPos().left + 'px'
+        })
       } else {
         if (this.inline && !this.disabled) return (this.visible = true)
         this.$emit('close', this)
@@ -1316,6 +1330,23 @@ export default {
     }
   },
   methods: {
+    getPos() {
+      const element = !this.customInput
+        ? document.getElementById('mainContainer')
+        : document.querySelector(this.customInput)
+      return {
+        top: element.getBoundingClientRect().top,
+        left: element.getBoundingClientRect().left,
+        right: element.offsetRight,
+        bottom: element.offsetBottom
+      }
+    },
+    getVpdInputGroupHeight() {
+      const element = !this.customInput
+        ? document.getElementById('vpdInputGroup')
+        : document.querySelector(this.customInput)
+      return element.offsetHeight
+    },
     nextStep(fromStep) {
       const checkAndSubmit = () => {
         let minLengthToSubmit = this.range ? 2 : this.multiple ? 0 : 1

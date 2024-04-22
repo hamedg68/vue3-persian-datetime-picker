@@ -1,15 +1,23 @@
 <template>
   <div class="home">
-    <h1>{{ pageTitle }}</h1>
+    <h1>aa{{ pageTitle }}aa</h1>
+    <!-- <div>
+      111
+      <date-picker v-model="date" popover />
+      {{ date }}
+    </div> -->
+
     <div>
-      <date-picker v-model="date" />
+      222
+      <input class="tt"/>
+      <date-picker v-model="date" popover custom-input=".tt" />
       {{ date }}
     </div>
 
-    <div style="margin-top:30px">
+    <!-- <div style="margin-top:30px">
       <date-picker v-model="time" type="time" />
       {{ time }}
-    </div>
+    </div> -->
   </div>
 </template>
 
