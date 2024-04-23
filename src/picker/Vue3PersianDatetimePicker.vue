@@ -1253,11 +1253,10 @@ export default {
 
         this.$nextTick(() => {
           const element = document.getElementById('vdpContainer')
-          console.log(
-            'opqa',
-            this.getPos().top,
-            this.getVpdInputGroupHeight()
-          )
+          // console.log(
+          //   `top:${this.getPos().top}+${this.getVpdInputGroupHeight()}`,
+          //   `left:${this.getPos().left}`,'#'
+          // )
           element.style.top =
             this.getPos().top + this.getVpdInputGroupHeight() + 'px'
           element.style.left = this.getPos().left + 'px'
@@ -1335,8 +1334,8 @@ export default {
         ? document.getElementById('mainContainer')
         : document.querySelector(this.customInput)
       return {
-        top: element.getBoundingClientRect().top,
-        left: element.getBoundingClientRect().left,
+        top: element.offsetTop,
+        left: element.offsetLeft,
         right: element.offsetRight,
         bottom: element.offsetBottom
       }
@@ -1846,12 +1845,21 @@ export default {
       this.popoverPlace = 'bottom-right'
       this.$nextTick(() => {
         let placement = ['bottom', 'right']
-        let container = this.$refs.container
+        // let container = this.$refs.container
+        let container =  this.customInputElement
+          ? document.querySelector(this.customInput)
+          : this.$refs.container
+          
         let rect = container.getBoundingClientRect()
         let left = rect.left
         let bottom = window.innerHeight - rect.bottom
+
+
         if (bottom <= 0) placement[0] = 'top'
         if (left <= 0) placement[1] = 'left'
+
+        console.log(placement.join('-'), window.innerHeight,rect.bottom, `bottom:${bottom}`, `left:${left}`);
+
         this.popoverPlace = placement.join('-')
       })
     }

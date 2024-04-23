@@ -626,7 +626,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=138f368e
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=5129c28d
 
 
 var _hoisted_1 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])("x");
@@ -1179,7 +1179,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["name"])], 10, ["data-type", "data-placement", "data-locale", "data-locale-dir"]);
 }
-// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=138f368e
+// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=5129c28d
 
 // EXTERNAL MODULE: ./src/picker/assets/scss/style.scss
 var style = __webpack_require__("4635");
@@ -3804,7 +3804,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         this.$emit('open', this);
         this.$nextTick(function () {
           var element = document.getElementById('vdpContainer');
-          console.log('opqa', _this7.getPos().top, _this7.getVpdInputGroupHeight());
+          console.log("top:".concat(_this7.getPos().top, "+").concat(_this7.getVpdInputGroupHeight()), "left:".concat(_this7.getPos().left), '#');
           element.style.top = _this7.getPos().top + _this7.getVpdInputGroupHeight() + 'px';
           element.style.left = _this7.getPos().left + 'px';
         });
@@ -3881,8 +3881,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     getPos: function getPos() {
       var element = !this.customInput ? document.getElementById('mainContainer') : document.querySelector(this.customInput);
       return {
-        top: element.getBoundingClientRect().top,
-        left: element.getBoundingClientRect().left,
+        top: element.offsetTop,
+        left: element.offsetLeft,
         right: element.offsetRight,
         bottom: element.offsetBottom
       };

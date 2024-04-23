@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>aa{{ pageTitle }}aa</h1>
+    <h1>{{ pageTitle }}</h1>
     <!-- <div>
       111
       <date-picker v-model="date" popover />
