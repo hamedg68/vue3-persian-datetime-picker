@@ -626,7 +626,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=5129c28d
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=9b9c3a0e
 
 
 var _hoisted_1 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])("x");
@@ -1179,7 +1179,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["name"])], 10, ["data-type", "data-placement", "data-locale", "data-locale-dir"]);
 }
-// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=5129c28d
+// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=9b9c3a0e
 
 // EXTERNAL MODULE: ./src/picker/assets/scss/style.scss
 var style = __webpack_require__("4635");
@@ -3803,10 +3803,21 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         this.setPlacement();
         this.$emit('open', this);
         this.$nextTick(function () {
-          var element = document.getElementById('vdpContainer');
-          console.log("top:".concat(_this7.getPos().top, "+").concat(_this7.getVpdInputGroupHeight()), "left:".concat(_this7.getPos().left), '#');
+          var element = document.getElementById('vdpContainer'); // console.log(
+          //   `top:${this.getPos().top}+${this.getVpdInputGroupHeight()}`,
+          //   `left:${this.getPos().left}`,'#'
+          // )
+
+          var placement = _this7.popoverPlace.split('-');
+
           element.style.top = _this7.getPos().top + _this7.getVpdInputGroupHeight() + 'px';
-          element.style.left = _this7.getPos().left + 'px';
+          console.log('WWWW', placement[1], _this7.getPos().top, _this7.getVpdInputGroupHeight());
+
+          if (placement[1] === 'left') {
+            element.style.left = _this7.getPos().left + 'px';
+          } else if (placement[1] === 'right') {
+            element.style.right = window.innerWidth - _this7.getVpdInputGroupWidth() - _this7.getPos().left + 'px';
+          }
         });
       } else {
         if (this.inline && !this.disabled) return this.visible = true;
@@ -3879,17 +3890,23 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   },
   methods: {
     getPos: function getPos() {
-      var element = !this.customInput ? document.getElementById('mainContainer') : document.querySelector(this.customInput);
+      var element = !this.customInput ? document.getElementById('mainContainer') : document.querySelector(this.customInput); // const rect = element.getBoundingClientRect()
+
+      var rect = element;
       return {
-        top: element.offsetTop,
-        left: element.offsetLeft,
-        right: element.offsetRight,
-        bottom: element.offsetBottom
+        top: rect.offsetTop,
+        left: rect.offsetLeft // right: rect.right,
+        // bottom: rect.bottom
+
       };
     },
     getVpdInputGroupHeight: function getVpdInputGroupHeight() {
       var element = !this.customInput ? document.getElementById('vpdInputGroup') : document.querySelector(this.customInput);
       return element.offsetHeight;
+    },
+    getVpdInputGroupWidth: function getVpdInputGroupWidth() {
+      var element = !this.customInput ? document.getElementById('vpdInputGroup') : document.querySelector(this.customInput);
+      return element.offsetWidth;
     },
     nextStep: function nextStep(fromStep) {
       var _this10 = this;
@@ -4429,13 +4446,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       if (allowed.indexOf(this.popover) !== -1) return this.popoverPlace = this.popover;
       this.popoverPlace = 'bottom-right';
       this.$nextTick(function () {
-        var placement = ['bottom', 'right'];
-        var container = _this17.$refs.container;
+        var placement = ['bottom', 'right']; // let container = this.$refs.container
+
+        var container = _this17.customInputElement ? document.querySelector(_this17.customInput) : _this17.$refs.container;
         var rect = container.getBoundingClientRect();
         var left = rect.left;
         var bottom = window.innerHeight - rect.bottom;
         if (bottom <= 0) placement[0] = 'top';
-        if (left <= 0) placement[1] = 'left';
+        if (left <= 316) placement[1] = 'left';
+        console.log(placement.join('-'), window.innerHeight, "bottom:".concat(rect.bottom), "left:".concat(left), "finalBottom:".concat(bottom));
         _this17.popoverPlace = placement.join('-');
       });
     }

@@ -9,7 +9,7 @@
 
     <div>
       222
-      <input class="tt"/>
+      <input style="display: block;" class="tt" />
       <date-picker v-model="date" popover custom-input=".tt" />
       {{ date }}
     </div>
@@ -34,6 +34,18 @@ export default {
       time: '',
       pageTitle: process.env.VUE_APP_TITLE
     }
+  },
+  methods: {
+    getPos() {
+      const element = document.querySelector('.tt')
+      const rect = element.getBoundingClientRect()
+
+      console.log(rect.right)
+      console.log(rect.left)
+    }
+  },
+
+  mounted() {
   }
 }
 </script>

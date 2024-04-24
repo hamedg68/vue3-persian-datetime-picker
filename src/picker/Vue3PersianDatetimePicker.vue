@@ -1257,9 +1257,26 @@ export default {
           //   `top:${this.getPos().top}+${this.getVpdInputGroupHeight()}`,
           //   `left:${this.getPos().left}`,'#'
           // )
+          const placement = this.popoverPlace.split('-')
+
           element.style.top =
             this.getPos().top + this.getVpdInputGroupHeight() + 'px'
-          element.style.left = this.getPos().left + 'px'
+
+          console.log(
+            'WWWW',
+            placement[1],
+            this.getPos().top,
+            this.getVpdInputGroupHeight()
+          )
+          if (placement[1] === 'left') {
+            element.style.left = this.getPos().left + 'px'
+          } else if (placement[1] === 'right') {
+            element.style.right =
+              window.innerWidth -
+              this.getVpdInputGroupWidth() -
+              this.getPos().left +
+              'px'
+          }
         })
       } else {
         if (this.inline && !this.disabled) return (this.visible = true)
@@ -1333,11 +1350,15 @@ export default {
       const element = !this.customInput
         ? document.getElementById('mainContainer')
         : document.querySelector(this.customInput)
+
+      // const rect = element.getBoundingClientRect()
+      const rect = element
+
       return {
-        top: element.offsetTop,
-        left: element.offsetLeft,
-        right: element.offsetRight,
-        bottom: element.offsetBottom
+        top: rect.offsetTop,
+        left: rect.offsetLeft
+        // right: rect.right,
+        // bottom: rect.bottom
       }
     },
     getVpdInputGroupHeight() {
@@ -1345,6 +1366,12 @@ export default {
         ? document.getElementById('vpdInputGroup')
         : document.querySelector(this.customInput)
       return element.offsetHeight
+    },
+    getVpdInputGroupWidth() {
+      const element = !this.customInput
+        ? document.getElementById('vpdInputGroup')
+        : document.querySelector(this.customInput)
+      return element.offsetWidth
     },
     nextStep(fromStep) {
       const checkAndSubmit = () => {
@@ -1846,19 +1873,25 @@ export default {
       this.$nextTick(() => {
         let placement = ['bottom', 'right']
         // let container = this.$refs.container
-        let container =  this.customInputElement
+        let container = this.customInputElement
           ? document.querySelector(this.customInput)
           : this.$refs.container
-          
+
         let rect = container.getBoundingClientRect()
+
         let left = rect.left
         let bottom = window.innerHeight - rect.bottom
 
-
         if (bottom <= 0) placement[0] = 'top'
-        if (left <= 0) placement[1] = 'left'
+        // if (left <= 316) placement[1] = 'left'
 
-        console.log(placement.join('-'), window.innerHeight,rect.bottom, `bottom:${bottom}`, `left:${left}`);
+        console.log(
+          placement.join('-'),
+          window.innerHeight,
+          `bottom:${rect.bottom}`,
+          `left:${left}`,
+          `finalBottom:${bottom}`
+        )
 
         this.popoverPlace = placement.join('-')
       })
