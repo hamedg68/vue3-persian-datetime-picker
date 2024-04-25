@@ -1263,7 +1263,7 @@ export default {
             this.getPos().top + this.getVpdInputGroupHeight() + 'px'
 
           console.log(
-            'WWWW',
+            'OPOPOP',
             placement[1],
             this.getPos().top,
             this.getVpdInputGroupHeight()
@@ -1880,10 +1880,10 @@ export default {
         let rect = container.getBoundingClientRect()
 
         let left = rect.left
+        let right = rect.right
         let bottom = window.innerHeight - rect.bottom
-
         if (bottom <= 0) placement[0] = 'top'
-        // if (left <= 316) placement[1] = 'left'
+        if (right < 316) placement[1] = 'left'
 
         console.log(
           placement.join('-'),

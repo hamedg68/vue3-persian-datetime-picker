@@ -7,9 +7,9 @@
       {{ date }}
     </div> -->
 
-    <div>
-      222
-      <input style="display: block;" class="tt" />
+    <div style="display: flex;">
+      
+      <input class="tt" style="width: 100%;" />
       <date-picker v-model="date" popover custom-input=".tt" />
       {{ date }}
     </div>
@@ -45,7 +45,6 @@ export default {
     }
   },
 
-  mounted() {
-  }
+  mounted() {}
 }
 </script>
