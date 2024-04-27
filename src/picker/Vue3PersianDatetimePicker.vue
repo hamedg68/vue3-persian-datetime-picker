@@ -1253,29 +1253,29 @@ export default {
 
         this.$nextTick(() => {
           const element = document.getElementById('vdpContainer')
-          // console.log(
-          //   `top:${this.getPos().top}+${this.getVpdInputGroupHeight()}`,
-          //   `left:${this.getPos().left}`,'#'
-          // )
           const placement = this.popoverPlace.split('-')
 
           element.style.top =
             this.getPos().top + this.getVpdInputGroupHeight() + 'px'
 
           console.log(
-            'OPOPOP',
+            'kjlkjl',
             placement[1],
             this.getPos().top,
-            this.getVpdInputGroupHeight()
+            this.getVpdInputGroupHeight(),
+            this.getVpdInputGroupWidth()
           )
           if (placement[1] === 'left') {
             element.style.left = this.getPos().left + 'px'
           } else if (placement[1] === 'right') {
-            element.style.right =
-              window.innerWidth -
-              this.getVpdInputGroupWidth() -
-              this.getPos().left +
-              'px'
+            console.log(
+              'testRight: ',
+              window.innerWidth,
+              document.body.clientWidth,
+              this.getVpdInputGroupWidth(),
+              this.getPos().left
+            )
+            element.style.right = document.documentElement.clientWidth -  this.getVpdInputGroupWidth() - this.getPos().left + 'px'
           }
         })
       } else {
@@ -1311,7 +1311,7 @@ export default {
       immediate: true,
       handler: function(displayValue) {
         if (!this.customInput) return
-        const customInput = document.querySelector(this.customInput)
+        const customInput = document.getElementById(this.customInput)
         if (customInput) customInput.value = displayValue
       }
     }
@@ -1349,14 +1349,14 @@ export default {
     getPos() {
       const element = !this.customInput
         ? document.getElementById('mainContainer')
-        : document.querySelector(this.customInput)
+        : document.getElementById(this.customInput)
 
-      // const rect = element.getBoundingClientRect()
-      const rect = element
+      const rect = element.getBoundingClientRect()
+      // const rect = element
 
       return {
-        top: rect.offsetTop,
-        left: rect.offsetLeft
+        top: rect.top,
+        left: rect.left
         // right: rect.right,
         // bottom: rect.bottom
       }
@@ -1364,13 +1364,13 @@ export default {
     getVpdInputGroupHeight() {
       const element = !this.customInput
         ? document.getElementById('vpdInputGroup')
-        : document.querySelector(this.customInput)
+        : document.getElementById(this.customInput)
       return element.offsetHeight
     },
     getVpdInputGroupWidth() {
       const element = !this.customInput
         ? document.getElementById('vpdInputGroup')
-        : document.querySelector(this.customInput)
+        : document.getElementById(this.customInput)
       return element.offsetWidth
     },
     nextStep(fromStep) {
@@ -1841,7 +1841,7 @@ export default {
       ) {
         let isOnPicker = this.$refs.picker.contains(event.target)
         let isOnInput = this.customInputElement
-          ? document.querySelector(this.customInput).contains(event.target)
+          ? document.getElementById(this.customInput).contains(event.target)
           : this.$refs.inputGroup.contains(event.target)
 
         if (isOnPicker) event.preventDefault()
@@ -1874,7 +1874,7 @@ export default {
         let placement = ['bottom', 'right']
         // let container = this.$refs.container
         let container = this.customInputElement
-          ? document.querySelector(this.customInput)
+          ? document.getElementById(this.customInput)
           : document.getElementById('vpdInputGroup')
 
         let rect = container.getBoundingClientRect()

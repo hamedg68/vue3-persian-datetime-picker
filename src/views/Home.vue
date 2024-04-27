@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>{{ pageTitle }}</h1>
+    <h1>a{{ pageTitle }}</h1>
     <!-- <div>
       111
       <date-picker v-model="date" popover />
@@ -8,10 +8,16 @@
     </div> -->
 
     <div style="display: flex;">
+      <div>
+        <input id="myID"  class="tt"  />
+      </div>
+      <date-picker  popover custom-input="myID" />
       
-      <input class="tt" style="width: 100%;" />
-      <date-picker v-model="date" popover custom-input=".tt" />
-      {{ date }}
+        <div>
+          <input id="myIDs"  class="tt"  />
+
+        </div>
+        <date-picker  popover custom-input="myIDs" />
     </div>
 
     <!-- <div style="margin-top:30px">
@@ -30,7 +36,7 @@ export default {
   },
   data() {
     return {
-      date: '',
+      date: '2024-05-05',
       time: '',
       pageTitle: process.env.VUE_APP_TITLE
     }
@@ -42,9 +48,17 @@ export default {
 
       console.log(rect.right)
       console.log(rect.left)
+    },
+    getVal(){
+      const customInput = document.getElementById('myID')
+      // console.log('ehhhh',customInput.value);
+
     }
   },
 
-  mounted() {}
+  mounted() {
+    this.getVal()
+
+  }
 }
 </script>
