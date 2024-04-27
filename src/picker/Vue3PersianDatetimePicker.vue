@@ -1875,7 +1875,7 @@ export default {
         // let container = this.$refs.container
         let container = this.customInputElement
           ? document.querySelector(this.customInput)
-          : this.$refs.container
+          : document.getElementById('vpdInputGroup')
 
         let rect = container.getBoundingClientRect()
 
@@ -1890,6 +1890,7 @@ export default {
           window.innerHeight,
           `bottom:${rect.bottom}`,
           `left:${left}`,
+          `right:${right}`,
           `finalBottom:${bottom}`
         )
 
