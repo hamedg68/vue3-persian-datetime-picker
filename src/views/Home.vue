@@ -1,23 +1,24 @@
 <template>
   <div class="home">
-    <h1>a{{ pageTitle }}</h1>
+    <h1>{{ pageTitle }}</h1>
     <!-- <div>
       111
       <date-picker v-model="date" popover />
       {{ date }}
     </div> -->
 
-    <div style="display: flex;">
-      <div>
-        <input id="myID"  class="tt"  />
-      </div>
-      <date-picker  popover custom-input="myID" />
-      
+    <div class="mClass">
+      <div style="display: flex;justify-content: right;">
         <div>
-          <input id="myIDs"  class="tt"  />
-
+          <input id="myID" class="tt" />
         </div>
-        <date-picker  popover custom-input="myIDs" />
+        <date-picker popover custom-input="myID" />
+
+        <div>
+          <input id="myIDs" class="tt" />
+        </div>
+        <date-picker popover custom-input="myIDs" />
+      </div>
     </div>
 
     <!-- <div style="margin-top:30px">
@@ -49,16 +50,21 @@ export default {
       console.log(rect.right)
       console.log(rect.left)
     },
-    getVal(){
+    getVal() {
       const customInput = document.getElementById('myID')
       // console.log('ehhhh',customInput.value);
-
     }
   },
 
   mounted() {
     this.getVal()
-
   }
 }
 </script>
+<style lang="css">
+.mClass {
+  background: royalblue;
+  contain: layout;
+  width: 900px;
+}
+</style>

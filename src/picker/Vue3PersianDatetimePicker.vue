@@ -1258,24 +1258,41 @@ export default {
           element.style.top =
             this.getPos().top + this.getVpdInputGroupHeight() + 'px'
 
-          console.log(
-            'kjlkjl',
-            placement[1],
-            this.getPos().top,
-            this.getVpdInputGroupHeight(),
-            this.getVpdInputGroupWidth()
-          )
+          console.log('placement', placement[1])
+          console.log('top', this.getPos().top)
+          console.log('left', this.getPos().left)
+          console.log('input height', this.getVpdInputGroupHeight())
+          console.log('input width', this.getVpdInputGroupWidth())
+
           if (placement[1] === 'left') {
             element.style.left = this.getPos().left + 'px'
           } else if (placement[1] === 'right') {
-            console.log(
-              'testRight: ',
-              window.innerWidth,
-              document.body.clientWidth,
-              this.getVpdInputGroupWidth(),
-              this.getPos().left
+            const divWithLayout = document.querySelector(
+              'div[style*="contain: layout;"]'
             )
-            element.style.right = document.documentElement.clientWidth -  this.getVpdInputGroupWidth() - this.getPos().left + 'px'
+
+            const width = divWithLayout
+              ? divWithLayout.clientWidth
+              : document.documentElement.clientWidth
+
+            console.log('screen width', window.innerWidth)
+            console.log(
+              'documentElement width',
+              document.documentElement.clientWidth
+            )
+            console.log(
+              'divContain with',
+              divWithLayout ? divWithLayout.clientWidth : ''
+            )
+            console.log('final width', width)
+            console.log(
+              'style right',
+              `(finalWidth - inputWidth - inputLeft)`,
+              width - this.getVpdInputGroupWidth() - this.getPos().left
+            )
+
+            element.style.right =
+              width - this.getVpdInputGroupWidth() - this.getPos().left + 'px'
           }
         })
       } else {
@@ -1351,14 +1368,25 @@ export default {
         ? document.getElementById('mainContainer')
         : document.getElementById(this.customInput)
 
-      const rect = element.getBoundingClientRect()
-      // const rect = element
+      const divWithLayout = document.querySelector(
+        'div[style*="contain: layout;"]'
+      )
 
-      return {
-        top: rect.top,
-        left: rect.left
-        // right: rect.right,
-        // bottom: rect.bottom
+      if (divWithLayout) {
+        const rect = element
+        return {
+          top: rect.offsetTop,
+          left: rect.offsetLeft
+        }
+      } else {
+        const rect = element.getBoundingClientRect()
+
+        return {
+          top: rect.top,
+          left: rect.left
+          // right: rect.right,
+          // bottom: rect.bottom
+        }
       }
     },
     getVpdInputGroupHeight() {

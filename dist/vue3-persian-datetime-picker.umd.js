@@ -626,7 +626,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=1c78a53b
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=7eeb8637
 
 
 var _hoisted_1 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])("x");
@@ -1179,7 +1179,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["name"])], 10, ["data-type", "data-placement", "data-locale", "data-locale-dir"]);
 }
-// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=1c78a53b
+// CONCATENATED MODULE: ./src/picker/Vue3PersianDatetimePicker.vue?vue&type=template&id=7eeb8637
 
 // EXTERNAL MODULE: ./src/picker/assets/scss/style.scss
 var style = __webpack_require__("4635");
@@ -3808,13 +3808,23 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           var placement = _this7.popoverPlace.split('-');
 
           element.style.top = _this7.getPos().top + _this7.getVpdInputGroupHeight() + 'px';
-          console.log('kjlkjl', placement[1], _this7.getPos().top, _this7.getVpdInputGroupHeight(), _this7.getVpdInputGroupWidth());
+          console.log('placement', placement[1]);
+          console.log('top', _this7.getPos().top);
+          console.log('left', _this7.getPos().left);
+          console.log('input height', _this7.getVpdInputGroupHeight());
+          console.log('input width', _this7.getVpdInputGroupWidth());
 
           if (placement[1] === 'left') {
             element.style.left = _this7.getPos().left + 'px';
           } else if (placement[1] === 'right') {
-            console.log('testRight: ', window.innerWidth, document.body.clientWidth, _this7.getVpdInputGroupWidth(), _this7.getPos().left);
-            element.style.right = document.documentElement.clientWidth - _this7.getVpdInputGroupWidth() - _this7.getPos().left + 'px';
+            var divWithLayout = document.querySelector('div[style*="contain: layout;"]');
+            var width = divWithLayout ? divWithLayout.clientWidth : document.documentElement.clientWidth;
+            console.log('screen width', window.innerWidth);
+            console.log('documentElement width', document.documentElement.clientWidth);
+            console.log('divContain with', divWithLayout ? divWithLayout.clientWidth : '');
+            console.log('final width', width);
+            console.log('style right', "(finalWidth - inputWidth - inputLeft)", width - _this7.getVpdInputGroupWidth() - _this7.getPos().left);
+            element.style.right = width - _this7.getVpdInputGroupWidth() - _this7.getPos().left + 'px';
           }
         });
       } else {
@@ -3889,14 +3899,24 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   methods: {
     getPos: function getPos() {
       var element = !this.customInput ? document.getElementById('mainContainer') : document.getElementById(this.customInput);
-      var rect = element.getBoundingClientRect(); // const rect = element
+      var divWithLayout = document.querySelector('div[style*="contain: layout;"]');
 
-      return {
-        top: rect.top,
-        left: rect.left // right: rect.right,
-        // bottom: rect.bottom
+      if (divWithLayout) {
+        var rect = element;
+        return {
+          top: rect.offsetTop,
+          left: rect.offsetLeft
+        };
+      } else {
+        var _rect = element.getBoundingClientRect();
 
-      };
+        return {
+          top: _rect.top,
+          left: _rect.left // right: rect.right,
+          // bottom: rect.bottom
+
+        };
+      }
     },
     getVpdInputGroupHeight: function getVpdInputGroupHeight() {
       var element = !this.customInput ? document.getElementById('vpdInputGroup') : document.getElementById(this.customInput);
