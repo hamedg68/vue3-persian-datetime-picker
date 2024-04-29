@@ -1267,9 +1267,7 @@ export default {
           if (placement[1] === 'left') {
             element.style.left = this.getPos().left + 'px'
           } else if (placement[1] === 'right') {
-            const divWithLayout = document.querySelector(
-              'div[style*="contain: layout;"]'
-            )
+            const divWithLayout = this.findParentsWithLayoutContain(element)
 
             const width = divWithLayout
               ? divWithLayout.clientWidth
@@ -1281,8 +1279,8 @@ export default {
               document.documentElement.clientWidth
             )
             console.log(
-              'divContain with',
-              divWithLayout ? divWithLayout.clientWidth : ''
+              '22divContain with',
+              divWithLayout ? divWithLayout.clientWidth : 'nothing!!!'
             )
             console.log('final width', width)
             console.log(
@@ -1363,16 +1361,36 @@ export default {
     }
   },
   methods: {
+    findParentsWithLayoutContain(element) {
+      // Start from the parent element
+      let parent = element.parentNode
+
+      // Check if the parent exists and is not the document body
+      while (parent && parent !== document.body) {
+        // Get the computed style of the parent element
+        let style = window.getComputedStyle(parent)
+
+        // Check if the parent's contain property is set to 'layout'
+        if (style.contain && style.contain === 'layout') {
+          return parent // Return the parent element with 'contain: layout'
+        }
+
+        // Move up to the next parent element
+        parent = parent.parentNode
+      }
+
+      // Return null if no parent with 'contain: layout' is found
+      return null
+    },
+
     getPos() {
       const element = !this.customInput
         ? document.getElementById('mainContainer')
         : document.getElementById(this.customInput)
 
-      const divWithLayout = document.querySelector(
-        'div[style*="contain: layout;"]'
-      )
+      const divWithLayout = this.findParentsWithLayoutContain(element)
 
-      if (divWithLayout) {
+      if (!divWithLayout) {
         const rect = element
         return {
           top: rect.offsetTop,
