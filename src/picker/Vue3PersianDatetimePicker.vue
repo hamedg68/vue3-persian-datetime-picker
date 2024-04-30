@@ -1279,7 +1279,7 @@ export default {
               document.documentElement.clientWidth
             )
             console.log(
-              '22divContain with',
+              '722divContain with',
               divWithLayout ? divWithLayout.clientWidth : 'nothing!!!'
             )
             console.log('final width', width)
@@ -1326,7 +1326,7 @@ export default {
       immediate: true,
       handler: function(displayValue) {
         if (!this.customInput) return
-        const customInput = document.getElementById(this.customInput)
+        const customInput = document.querySelector(this.customInput)
         if (customInput) customInput.value = displayValue
       }
     }
@@ -1386,11 +1386,11 @@ export default {
     getPos() {
       const element = !this.customInput
         ? document.getElementById('mainContainer')
-        : document.getElementById(this.customInput)
+        : document.querySelector(this.customInput)
 
       const divWithLayout = this.findParentsWithLayoutContain(element)
 
-      if (!divWithLayout) {
+      if (divWithLayout) {
         const rect = element
         return {
           top: rect.offsetTop,
@@ -1410,13 +1410,13 @@ export default {
     getVpdInputGroupHeight() {
       const element = !this.customInput
         ? document.getElementById('vpdInputGroup')
-        : document.getElementById(this.customInput)
+        : document.querySelector(this.customInput)
       return element.offsetHeight
     },
     getVpdInputGroupWidth() {
       const element = !this.customInput
         ? document.getElementById('vpdInputGroup')
-        : document.getElementById(this.customInput)
+        : document.querySelector(this.customInput)
       return element.offsetWidth
     },
     nextStep(fromStep) {
@@ -1887,7 +1887,7 @@ export default {
       ) {
         let isOnPicker = this.$refs.picker.contains(event.target)
         let isOnInput = this.customInputElement
-          ? document.getElementById(this.customInput).contains(event.target)
+          ? document.querySelector(this.customInput).contains(event.target)
           : this.$refs.inputGroup.contains(event.target)
 
         if (isOnPicker) event.preventDefault()
@@ -1920,7 +1920,7 @@ export default {
         let placement = ['bottom', 'right']
         // let container = this.$refs.container
         let container = this.customInputElement
-          ? document.getElementById(this.customInput)
+          ? document.querySelector(this.customInput)
           : document.getElementById('vpdInputGroup')
 
         let rect = container.getBoundingClientRect()

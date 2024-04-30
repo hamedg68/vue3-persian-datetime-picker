@@ -189,7 +189,7 @@ export const addEventListener = function(el, type, handler) {
 
 export const addLiveEvent = function(selector, event, callback, context) {
   addEventListener(context || document, event, function(e) {
-    if (e.target.closest('#' + selector)) callback.call(e.target, e)
+    if (e.target.closest(selector)) callback.call(e.target, e)
   })
 }
 
