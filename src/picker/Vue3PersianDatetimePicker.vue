@@ -1252,46 +1252,7 @@ export default {
         this.$emit('open', this)
 
         this.$nextTick(() => {
-          const element = document.getElementById('vdpContainer')
-          const placement = this.popoverPlace.split('-')
-
-          element.style.top =
-            this.getPos().top + this.getVpdInputGroupHeight() + 'px'
-
-          console.log('placement', placement[1])
-          console.log('top', this.getPos().top)
-          console.log('left', this.getPos().left)
-          console.log('input height', this.getVpdInputGroupHeight())
-          console.log('input width', this.getVpdInputGroupWidth())
-
-          if (placement[1] === 'left') {
-            element.style.left = this.getPos().left + 'px'
-          } else if (placement[1] === 'right') {
-            const divWithLayout = this.findParentsWithLayoutContain(element)
-
-            const width = divWithLayout
-              ? divWithLayout.clientWidth
-              : document.documentElement.clientWidth
-
-            console.log('screen width', window.innerWidth)
-            console.log(
-              'documentElement width',
-              document.documentElement.clientWidth
-            )
-            console.log(
-              '722divContain with',
-              divWithLayout ? divWithLayout.clientWidth : 'nothing!!!'
-            )
-            console.log('final width', width)
-            console.log(
-              'style right',
-              `(finalWidth - inputWidth - inputLeft)`,
-              width - this.getVpdInputGroupWidth() - this.getPos().left
-            )
-
-            element.style.right =
-              width - this.getVpdInputGroupWidth() - this.getPos().left + 'px'
-          }
+          this.locate()
         })
       } else {
         if (this.inline && !this.disabled) return (this.visible = true)
@@ -1343,6 +1304,10 @@ export default {
       if (this.customInput && this.editable)
         addLiveEvent(this.customInput, 'blur', this.setOutput)
     })
+    document.addEventListener('scroll', async () => {
+      await this.setPlacement()
+      this.locate()
+    })
     document.body.addEventListener('keydown', e => {
       e = e || event
       let code = e.keyCode
@@ -1352,6 +1317,7 @@ export default {
     window.addEventListener('mousedown', this.onWindowClick, true)
   },
   onBeforeUnmount() {
+    document.removeEventListener('scroll')
     window.clearInterval(this.updateNowInterval)
     window.removeEventListener('resize', this.onWindowResize, true)
     window.removeEventListener('mousedown', this.onWindowClick, true)
@@ -1418,6 +1384,58 @@ export default {
         ? document.getElementById('vpdInputGroup')
         : document.querySelector(this.customInput)
       return element.offsetWidth
+    },
+    locate() {
+      if (!this.visible) return
+      const element = document.getElementById('vdpContainer')
+      const placement = this.popoverPlace.split('-')
+      console.log(
+        '!!!###!!!',
+        element.offsetWidth,
+        placement[0],
+        this.getPos().top,
+        element.offsetHeight,
+        this.getPos().top - element.offsetHeight
+      )
+      element.style.top =
+        (placement[0] === 'bottom'
+          ? this.getPos().top + this.getVpdInputGroupHeight()
+          : this.getPos().top - element.offsetHeight) + 'px'
+
+      // console.log('placement', placement[1])
+      // console.log('top', this.getPos().top)
+      // console.log('left', this.getPos().left)
+      // console.log('input height', this.getVpdInputGroupHeight())
+      // console.log('input width', this.getVpdInputGroupWidth())
+
+      if (placement[1] === 'left') {
+        element.style.left = this.getPos().left + 'px'
+      } else if (placement[1] === 'right') {
+        const divWithLayout = this.findParentsWithLayoutContain(element)
+
+        const width = divWithLayout
+          ? divWithLayout.clientWidth
+          : document.documentElement.clientWidth
+
+        // console.log('screen width', window.innerWidth)
+        // console.log(
+        //   'documentElement width',
+        //   document.documentElement.clientWidth
+        // )
+        // console.log(
+        //   '722divContain with',
+        //   divWithLayout ? divWithLayout.clientWidth : 'nothing!!!'
+        // )
+        // console.log('final width', width)
+        // console.log(
+        //   'style right',
+        //   `(finalWidth - inputWidth - inputLeft)`,
+        //   width - this.getVpdInputGroupWidth() - this.getPos().left
+        // )
+
+        element.style.right =
+          width - this.getVpdInputGroupWidth() - this.getPos().left + 'px'
+      }
     },
     nextStep(fromStep) {
       const checkAndSubmit = () => {
@@ -1900,8 +1918,8 @@ export default {
         }
       }
     },
-    setPlacement() {
-      if (!this.isPopover) return
+    async setPlacement() {
+      if (!this.isPopover || !this.visible) return
       let allowed = [
         'top-left',
         'top-right',
@@ -1916,29 +1934,33 @@ export default {
         return (this.popoverPlace = this.popover)
 
       this.popoverPlace = 'bottom-right'
-      this.$nextTick(() => {
+      await this.$nextTick(() => {
+        const container = document.getElementById('vdpContainer')
+
         let placement = ['bottom', 'right']
-        // let container = this.$refs.container
-        let container = this.customInputElement
+
+        let input = this.customInputElement
           ? document.querySelector(this.customInput)
           : document.getElementById('vpdInputGroup')
 
-        let rect = container.getBoundingClientRect()
+        let rect = input.getBoundingClientRect()
 
         let left = rect.left
         let right = rect.right
         let bottom = window.innerHeight - rect.bottom
-        if (bottom <= 0) placement[0] = 'top'
-        if (right < 316) placement[1] = 'left'
+        if (bottom < container.offsetHeight) placement[0] = 'top'
+        if (right < container.offsetWidth) placement[1] = 'left'
 
-        console.log(
-          placement.join('-'),
-          window.innerHeight,
-          `bottom:${rect.bottom}`,
-          `left:${left}`,
-          `right:${right}`,
-          `finalBottom:${bottom}`
-        )
+        // console.log(
+        //   '**!!**',
+        //   placement.join('-'),
+        //   window.innerHeight,
+        //   container.offsetHeight,
+        //   `bottom:${rect.bottom}`,
+        //   `left:${left}`,
+        //   `right:${right}`,
+        //   `finalBottom:${window.innerHeight - bottom}`
+        // )
 
         this.popoverPlace = placement.join('-')
       })

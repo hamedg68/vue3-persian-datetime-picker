@@ -7,19 +7,22 @@
       {{ date }}
     </div> -->
 
-    <div class="mClass">
-      <div style="display: flex;justify-content: right;">
+
+    <div v-for="i in 30">sad</div>
+    <div style="margin-right: auto;">
+      <div style="display: flex;justify-content: left;">
         <div>
           <input id="myID" class="tt" />
         </div>
-        <date-picker popover custom-input="myID" />
+        <date-picker popover custom-input=".tt" />
 
         <div>
-          <input id="myIDs" class="tt" />
+          <input id="myIDs" class="ttt" />
         </div>
-        <date-picker popover custom-input="myIDs" />
+        <date-picker popover custom-input=".ttt" />
       </div>
     </div>
+    <div v-for="i in 333">sad</div>
 
     <!-- <div style="margin-top:30px">
       <date-picker v-model="time" type="time" />
