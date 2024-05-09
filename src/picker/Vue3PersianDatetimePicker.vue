@@ -199,7 +199,7 @@
                         />
                       </slot>
                     </button>
-                    <transition name="slideX">
+                    <transition name="slideX" @after-leave="onAfterLeave">
                       <div
                         :key="date.xMonth()"
                         class="vpd-month-label"
@@ -1231,7 +1231,13 @@ export default {
       if (this.isLower(this.date)) this.date = this.minDate.clone()
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
-    visible(val) {
+    async visible(val) {
+      const input = this.customInputElement
+        ? document.querySelector(this.customInput)
+        : document.getElementById('vpdInputGroup')
+
+      const parentWithScrollbar = this.findParentWithScrollbar(input)
+
       if (val) {
         if (this.disabled) return (this.visible = false)
         if (this.type === 'datetime' && this.view === 'day') this.goStep('d')
@@ -1251,10 +1257,38 @@ export default {
         this.setPlacement()
         this.$emit('open', this)
 
-        this.$nextTick(() => {
+        await this.$nextTick(() => {
           this.locate()
         })
+
+        console.log('first parent with scroll bar', parentWithScrollbar)
+        console.log(
+          'first parent with scroll bar and parentNode',
+          parentWithScrollbar.parentNode === document
+        )
+        // console.log('input', input)
+
+        let el =
+          parentWithScrollbar.parentNode === document
+            ? parentWithScrollbar.parentNode
+            : parentWithScrollbar
+
+        console.log('el', el)
+
+        el.addEventListener('scroll', this.updateOnScroll())
+        // parentWithScrollbar.addEventListener('scroll', async () => {
+        //   console.log('event scroll');
+        //   if (this.isPopover) {
+        //     this.checkScroll()
+        //     await this.setPlacement()
+        //     this.locate()
+        //   }
+        // })
       } else {
+        parentWithScrollbar.parentNode.removeEventListener(
+          'scroll',
+          this.updateOnScroll()
+        )
         if (this.inline && !this.disabled) return (this.visible = true)
         this.$emit('close', this)
       }
@@ -1304,10 +1338,6 @@ export default {
       if (this.customInput && this.editable)
         addLiveEvent(this.customInput, 'blur', this.setOutput)
     })
-    document.addEventListener('scroll', async () => {
-      await this.setPlacement()
-      this.locate()
-    })
     document.body.addEventListener('keydown', e => {
       e = e || event
       let code = e.keyCode
@@ -1327,6 +1357,28 @@ export default {
     }
   },
   methods: {
+    updateOnScroll() {
+      return async () => {
+        console.log(this.isPopover, 'Parent scrolled hey YOU')
+        if (this.isPopover) {
+          this.checkScroll()
+          await this.setPlacement()
+          this.locate()
+        }
+      }
+    },
+    findParentWithScrollbar(element) {
+      let parent = element.parentNode
+
+      while (parent) {
+        if (parent.scrollHeight > parent.clientHeight) {
+          return parent
+        }
+        parent = parent.parentNode
+      }
+
+      return null // No parent with scrollbar found
+    },
     findParentsWithLayoutContain(element) {
       // Start from the parent element
       let parent = element.parentNode
@@ -1348,7 +1400,13 @@ export default {
       // Return null if no parent with 'contain: layout' is found
       return null
     },
-
+    async onAfterLeave() {
+      if (this.isPopover) {
+        this.checkScroll()
+        await this.setPlacement()
+        this.locate()
+      }
+    },
     getPos() {
       const element = !this.customInput
         ? document.getElementById('mainContainer')
@@ -1358,6 +1416,7 @@ export default {
 
       if (divWithLayout) {
         const rect = element
+        console.log('GG', element, rect.offsetTop)
         return {
           top: rect.offsetTop,
           left: rect.offsetLeft
@@ -1389,21 +1448,13 @@ export default {
       if (!this.visible) return
       const element = document.getElementById('vdpContainer')
       const placement = this.popoverPlace.split('-')
-      console.log(
-        '!!!###!!!',
-        element.offsetWidth,
-        placement[0],
-        this.getPos().top,
-        element.offsetHeight,
-        this.getPos().top - element.offsetHeight
-      )
       element.style.top =
         (placement[0] === 'bottom'
           ? this.getPos().top + this.getVpdInputGroupHeight()
           : this.getPos().top - element.offsetHeight) + 'px'
 
       // console.log('placement', placement[1])
-      // console.log('top', this.getPos().top)
+      console.log('top', this.getPos().top)
       // console.log('left', this.getPos().left)
       // console.log('input height', this.getVpdInputGroupHeight())
       // console.log('input width', this.getVpdInputGroupWidth())
