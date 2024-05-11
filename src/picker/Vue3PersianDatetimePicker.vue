@@ -1232,11 +1232,9 @@ export default {
       if (this.isMore(this.date)) this.date = this.maxDate.clone()
     },
     async visible(val) {
-      const input = this.customInputElement
-        ? document.querySelector(this.customInput)
-        : document.getElementById('vpdInputGroup')
-
-      const parentWithScrollbar = this.findParentWithScrollbar(input)
+      const parentWithScrollbar = this.findParentWithScrollbar(
+        this.getTargetInput()
+      )
 
       if (val) {
         if (this.disabled) return (this.visible = false)
@@ -1357,6 +1355,11 @@ export default {
     }
   },
   methods: {
+    getTargetInput() {
+      return this.customInputElement
+        ? document.querySelector(this.customInput)
+        : document.getElementById('vpdInputGroup')
+    },
     updateOnScroll() {
       return async () => {
         if (this.isPopover) {
@@ -1408,16 +1411,9 @@ export default {
       }
     },
     getPos() {
-      const element = !this.customInput
-        ? document.getElementById('mainContainer')
-        : document.querySelector(this.customInput)
-
+      const element = this.getTargetInput()
       const divWithLayout = this.findParentsWithLayoutContain(element)
-
-      const input = this.customInputElement
-        ? document.querySelector(this.customInput)
-        : document.getElementById('vpdInputGroup')
-      const parentWithScrollbar = this.findParentWithScrollbar(input)
+      const parentWithScrollbar = this.findParentWithScrollbar(element)
 
       if (divWithLayout) {
         const rect = element
@@ -1436,15 +1432,11 @@ export default {
       }
     },
     getVpdInputGroupHeight() {
-      const element = !this.customInput
-        ? document.getElementById('vpdInputGroup')
-        : document.querySelector(this.customInput)
+      const element = this.getTargetInput()
       return element.offsetHeight
     },
     getVpdInputGroupWidth() {
-      const element = !this.customInput
-        ? document.getElementById('vpdInputGroup')
-        : document.querySelector(this.customInput)
+      const element = this.getTargetInput()
       return element.offsetWidth
     },
     locate() {
@@ -1456,18 +1448,6 @@ export default {
           ? this.getPos().top + this.getVpdInputGroupHeight()
           : this.getPos().top - element.offsetHeight) + 'px'
 
-      // console.log('placement', placement[1])
-      console.log(
-        'DDDtop',
-        this.getPos().bottom,
-        this.getPos().top,
-        this.getVpdInputGroupHeight(),
-        this.getPos().top + this.getVpdInputGroupHeight()
-      )
-      // console.log('left', this.getPos().left)
-      // console.log('input height', this.getVpdInputGroupHeight())
-      // console.log('input width', this.getVpdInputGroupWidth())
-
       if (placement[1] === 'left') {
         element.style.left = this.getPos().left + 'px'
       } else if (placement[1] === 'right') {
@@ -1476,22 +1456,6 @@ export default {
         const width = divWithLayout
           ? divWithLayout.clientWidth
           : document.documentElement.clientWidth
-
-        // console.log('screen width', window.innerWidth)
-        // console.log(
-        //   'documentElement width',
-        //   document.documentElement.clientWidth
-        // )
-        // console.log(
-        //   '722divContain with',
-        //   divWithLayout ? divWithLayout.clientWidth : 'nothing!!!'
-        // )
-        // console.log('final width', width)
-        // console.log(
-        //   'style right',
-        //   `(finalWidth - inputWidth - inputLeft)`,
-        //   width - this.getVpdInputGroupWidth() - this.getPos().left
-        // )
 
         element.style.right =
           width - this.getVpdInputGroupWidth() - this.getPos().left + 'px'
@@ -1999,13 +1963,10 @@ export default {
 
         let placement = ['bottom', 'right']
 
-        let input = this.customInputElement
-          ? document.querySelector(this.customInput)
-          : document.getElementById('vpdInputGroup')
+        let input = this.getTargetInput()
 
         let rect = input.getBoundingClientRect()
 
-        let left = rect.left
         let right = rect.right
         let bottom = window.innerHeight - rect.bottom
         if (bottom < container.offsetHeight) placement[0] = 'top'
