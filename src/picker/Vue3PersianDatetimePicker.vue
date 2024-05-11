@@ -1359,8 +1359,8 @@ export default {
   methods: {
     updateOnScroll() {
       return async () => {
-        console.log(this.isPopover, 'Parent scrolled hey YOU')
         if (this.isPopover) {
+          console.log(this.isPopover, 'Parent scrolled hey YOU!!!')
           this.checkScroll()
           await this.setPlacement()
           this.locate()
@@ -1414,21 +1414,24 @@ export default {
 
       const divWithLayout = this.findParentsWithLayoutContain(element)
 
+      const input = this.customInputElement
+        ? document.querySelector(this.customInput)
+        : document.getElementById('vpdInputGroup')
+      const parentWithScrollbar = this.findParentWithScrollbar(input)
+
       if (divWithLayout) {
         const rect = element
-        console.log('GG', element, rect.offsetTop)
         return {
-          top: rect.offsetTop,
+          top: !parentWithScrollbar
+            ? rect.offsetTop
+            : rect.offsetTop - parentWithScrollbar.scrollTop,
           left: rect.offsetLeft
         }
       } else {
         const rect = element.getBoundingClientRect()
-
         return {
           top: rect.top,
           left: rect.left
-          // right: rect.right,
-          // bottom: rect.bottom
         }
       }
     },
@@ -1454,7 +1457,13 @@ export default {
           : this.getPos().top - element.offsetHeight) + 'px'
 
       // console.log('placement', placement[1])
-      console.log('top', this.getPos().top)
+      console.log(
+        'DDDtop',
+        this.getPos().bottom,
+        this.getPos().top,
+        this.getVpdInputGroupHeight(),
+        this.getPos().top + this.getVpdInputGroupHeight()
+      )
       // console.log('left', this.getPos().left)
       // console.log('input height', this.getVpdInputGroupHeight())
       // console.log('input width', this.getVpdInputGroupWidth())
