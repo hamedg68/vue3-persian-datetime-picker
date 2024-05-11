@@ -1928,9 +1928,7 @@ export default {
         (this.$refs.inputGroup || this.customInputElement)
       ) {
         let isOnPicker = this.$refs.picker.contains(event.target)
-        let isOnInput = this.customInputElement
-          ? document.querySelector(this.customInput).contains(event.target)
-          : this.$refs.inputGroup.contains(event.target)
+        let isOnInput = this.getTargetInput().contains(event.target)
 
         if (isOnPicker) event.preventDefault()
         if (!isOnPicker && !isOnInput) {
@@ -1963,26 +1961,12 @@ export default {
 
         let placement = ['bottom', 'right']
 
-        let input = this.getTargetInput()
-
-        let rect = input.getBoundingClientRect()
-
-        let right = rect.right
-        let bottom = window.innerHeight - rect.bottom
+        let pos = this.getPos()
+        let right = pos.left + this.getVpdInputGroupWidth()
+        let bottom =
+          window.innerHeight - (pos.top + this.getVpdInputGroupHeight())
         if (bottom < container.offsetHeight) placement[0] = 'top'
         if (right < container.offsetWidth) placement[1] = 'left'
-
-        // console.log(
-        //   '**!!**',
-        //   placement.join('-'),
-        //   window.innerHeight,
-        //   container.offsetHeight,
-        //   `bottom:${rect.bottom}`,
-        //   `left:${left}`,
-        //   `right:${right}`,
-        //   `finalBottom:${window.innerHeight - bottom}`
-        // )
-
         this.popoverPlace = placement.join('-')
       })
     }
