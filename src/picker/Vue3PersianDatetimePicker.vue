@@ -10,8 +10,8 @@
   >
     <span
       v-if="!customInputElement"
-      id="vpdInputGroup"
-      ref="inputGroup"
+      :id="inputGroupId === '' ? 'vpdInputGroup' : inputGroupId"
+      :ref="inputGroupId === '' ? 'inputGroup' : inputGroupId"
       :class="['vpd-input-group', { 'vpd-disabled': disabled }]"
     >
       <label
@@ -472,6 +472,7 @@ export default {
   },
   mixins: [popupRouteChanger],
   props: {
+    inputGroupId: { type: String, default: '' },
     /**
      * Default input value
      * @type Number String
@@ -916,6 +917,11 @@ export default {
     }
   },
   computed: {
+    inputGroup() {
+      return this.inputGroupId === ''
+        ? this.$refs.inputGroup
+        : this.$refs[this.inputGroupId]
+    },
     vm() {
       return this
     },
@@ -1358,7 +1364,9 @@ export default {
     getTargetInput() {
       return this.customInputElement
         ? document.querySelector(this.customInput)
-        : document.getElementById('vpdInputGroup')
+        : document.getElementById(
+            this.inputGroupId === '' ? 'vpdInputGroup' : this.inputGroupId
+          )
     },
     updateOnScroll() {
       return async () => {
@@ -1925,11 +1933,12 @@ export default {
       if (
         this.isPopover &&
         this.$refs.picker &&
-        (this.$refs.inputGroup || this.customInputElement)
+        (this.inputGroup || this.customInputElement)
       ) {
         let isOnPicker = this.$refs.picker.contains(event.target)
-        let isOnInput = this.getTargetInput().contains(event.target)
-
+        let isOnInput = this.customInputElement
+          ? document.querySelector(this.customInput).contains(event.target)
+          : this.inputGroup.contains(event.target)
         if (isOnPicker) event.preventDefault()
         if (!isOnPicker && !isOnInput) {
           // setTimeout because:
