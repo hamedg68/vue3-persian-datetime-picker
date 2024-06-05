@@ -1205,7 +1205,7 @@ export default {
       return this.compactTime || (this.type === 'datetime' && this.simple)
     },
     customInputElement() {
-      if (this.element) return `#${this.element}`
+      if (this.element) return `${this.element}`
       return this.customInput
     }
   },
